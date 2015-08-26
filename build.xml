@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="phpunit" default="phpunit:run">
+
+  <!-- ## Properties -->
+
+  <property name="phpunit.bin"            value="${project.basedir}/bin/phpunit" />
+  <property name="phpunit.config.file"    value="${project.basedir}/phpunit.xml" />
+  <property name="phpunit.report.dir"     value="${project.basedir}/build/logs/phpunit" />
+  <property name="phpunit.testsuite.name" value="${project.basedir}/phpunit.xml" />
+  <property name="phpunit.testsuite.dir"  value="" />
+
+  <!-- ## Targets -->
+
+  <target name="phpunit:config"
+          description="Configures PHPUnit for the project.">
+    <copy file="${phpunit.config.file}"
+          tofile="${project.basedir}/phpunit.xml"
+          overwrite="true">
+      <filterchain>
+        <expandproperties />
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="phpunit:run"
+          description="Runs PHPUnit tests and prints human readable output. Intended for usage on the command line before committing."
+          depends="phpunit:config">
+    <exec command="${phpunit.bin}"
+          passthru="true"
+          checkreturn="true" />
+  </target>
+
+  <target name="phpunit:run-ci"
+          description="Runs PHPUnit tests and prints human readable output. Intended for usage on the continuous integration server."
+          depends="phpunit:config">
+    <exec command="${phpunit.bin} --log-junit ${phpunit.report.dir}/phpunit.xml"
+          passthru="true"
+          checkreturn="true" />
+  </target>
+
+</project>
